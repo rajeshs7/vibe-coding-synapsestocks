@@ -30,9 +30,9 @@ const router = createBrowserRouter([
     path: '/',
     element: <RequireAuth><Layout /></RequireAuth>,
     children: [
-      { index: true, element: <Dashboard /> },
-      { path: 'agents', element: <AgentConfigurator /> },
-      { path: 'results', element: <ResultsView /> },
+      { index: true, element: <RequireAuth><Dashboard /></RequireAuth> },
+      { path: 'agents', element: <RequireAuth><AgentConfigurator /></RequireAuth> },
+      { path: 'results', element: <RequireAuth><ResultsView /></RequireAuth> },
     ],
   },
 ]);

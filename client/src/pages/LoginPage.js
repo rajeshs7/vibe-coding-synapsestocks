@@ -1,14 +1,12 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Grid, Card, CardContent, Typography, TextField, Button, Alert } from '@mui/material';
-import StockImage from '../assets/stock-bg.jpg'; // Add your own relevant image here
+import { Grid, Card, CardContent, Typography, TextField, Button, Alert } from '@mui/material';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,47 +28,22 @@ export default function LoginPage() {
   };
 
   return (
-    <Grid container sx={{ minHeight: '100vh' }}>
-      {/* Left: Image (desktop only) */}
-      <Grid item md={6} sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', justifyContent: 'center', p: 0 }}>
-        <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-          <img
-            src={StockImage}
-            alt="Stock Market"
-            style={{
-              maxWidth: '80%',
-              maxHeight: '80vh',
-              objectFit: 'contain',
-              borderRadius: 16,
-              boxShadow: '0 8px 32px rgba(0,0,0,0.15)'
-            }}
-          />
-        </Box>
-      </Grid>
-      {/* Right: Login Form */}
+    <Grid
+      container
+      sx={{ minHeight: '100vh' }}
+      alignItems="center"
+      justifyContent="center"
+    >
       <Grid
         item
         xs={12}
-        md={6}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '100vh',
-          p: 2,
-          background: { xs: '#fff', md: 'none' },
-        }}
+        sm={8}
+        md={4}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
       >
-        <Card
-          sx={{
-            width: '100%',
-            maxWidth: 400,
-            p: 3,
-            boxShadow: 6,
-            bgcolor: 'background.paper',
-            opacity: 0.97,
-          }}
-        >
+        <Card sx={{ width: '100%', maxWidth: 400, p: 3, boxShadow: 6, bgcolor: 'background.paper', opacity: 0.97 }}>
           <CardContent>
             <Typography variant="h5" gutterBottom>
               Sign in to SynapseStocks
@@ -98,19 +71,13 @@ export default function LoginPage() {
                 margin="normal"
                 required
               />
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ mt: 2 }}
-              >
+              <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
                 Login
               </Button>
+              <Button color="secondary" fullWidth sx={{ mt: 1 }} onClick={() => navigate('/register')}>
+                Don't have an account? Sign up
+              </Button>
             </form>
-            <Button color="secondary" fullWidth sx={{ mt: 1 }} onClick={() => navigate('/register')}>
-              Don't have an account? Sign up
-            </Button>
           </CardContent>
         </Card>
       </Grid>
