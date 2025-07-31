@@ -28,6 +28,17 @@ export default function LoginPage() {
   };
 
   return (
+  <div
+    style={{
+      minHeight: '100vh',
+      width: '100vw',
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflow: 'auto',
+    }}
+  >
     <Grid
       container
       sx={{ minHeight: '100vh' }}
@@ -43,13 +54,37 @@ export default function LoginPage() {
         alignItems="center"
         justifyContent="center"
       >
-        <Card sx={{ width: '100%', maxWidth: 400, p: 3, boxShadow: 6, bgcolor: 'background.paper', opacity: 0.97 }}>
+        <Card
+          sx={{
+            width: '100%',
+            maxWidth: 400,
+            px: 4,
+            py: 5,
+            borderRadius: 5,
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+            bgcolor: 'rgba(255, 255, 255, 0.15)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            opacity: 1,
+          }}
+        >
           <CardContent>
-            <Typography variant="h5" gutterBottom>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{
+                fontWeight: 700,
+                letterSpacing: 1,
+                color: '#333',
+                textAlign: 'center',
+                mb: 3,
+                textShadow: '0 1px 2px rgba(255,255,255,0.2)'
+              }}
+            >
               Sign in to SynapseStocks
             </Typography>
             {error && (
-              <Alert severity="error" sx={{ mb: 2 }}>
+              <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
                 {error}
               </Alert>
             )}
@@ -61,6 +96,13 @@ export default function LoginPage() {
                 fullWidth
                 margin="normal"
                 required
+                sx={{
+                  input: {
+                    bgcolor: 'rgba(255,255,255,0.7)',
+                    borderRadius: 2,
+                  },
+                  mb: 2,
+                }}
               />
               <TextField
                 label="Password"
@@ -70,11 +112,56 @@ export default function LoginPage() {
                 fullWidth
                 margin="normal"
                 required
+                sx={{
+                  input: {
+                    bgcolor: 'rgba(255,255,255,0.7)',
+                    borderRadius: 2,
+                  },
+                  mb: 2,
+                }}
               />
-              <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                sx={{
+                  mt: 2,
+                  py: 1.5,
+                  borderRadius: 3,
+                  fontWeight: 600,
+                  fontSize: '1.1rem',
+                  background: 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)',
+                  boxShadow: '0 4px 14px 0 rgba(118,75,162,0.2)',
+                  transition: '0.2s',
+                  '&:hover': {
+                    background: 'linear-gradient(90deg, #764ba2 0%, #667eea 100%)',
+                    boxShadow: '0 6px 20px 0 rgba(118,75,162,0.25)',
+                  },
+                }}
+              >
                 Login
               </Button>
-              <Button color="secondary" fullWidth sx={{ mt: 1 }} onClick={() => navigate('/register')}>
+              <Button
+                color="secondary"
+                fullWidth
+                sx={{
+                  mt: 2,
+                  borderRadius: 3,
+                  fontWeight: 500,
+                  fontSize: '1rem',
+                  textTransform: 'none',
+                  background: 'rgba(255,255,255,0.5)',
+                  color: '#764ba2',
+                  boxShadow: 'none',
+                  transition: '0.2s',
+                  '&:hover': {
+                    background: 'rgba(255,255,255,0.7)',
+                    color: '#667eea',
+                  },
+                }}
+                onClick={() => navigate('/register')}
+              >
                 Don't have an account? Sign up
               </Button>
             </form>
@@ -82,5 +169,6 @@ export default function LoginPage() {
         </Card>
       </Grid>
     </Grid>
-  );
+  </div>
+);
 }

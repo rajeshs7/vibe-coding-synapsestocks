@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import theme from './theme';
 import Dashboard from './components/Dashboard';
 import AgentConfigurator from './components/AgentConfigurator';
 import ResultsView from './components/ResultsView';
@@ -38,7 +40,12 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }
 
 export default App;

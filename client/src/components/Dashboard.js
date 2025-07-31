@@ -25,7 +25,7 @@ const Dashboard = () => {
       <Grid container spacing={3} sx={{ mt: 2 }}>
         {/* News Agent Card */}
         <Grid item xs={12} md={6} lg={4}>
-          <Card>
+          <Card sx={{ bgcolor: '#fff' }}>
             <CardContent>
               <Typography variant="h6">News</Typography>
               <Typography variant="body2" color="text.secondary">
@@ -43,7 +43,7 @@ const Dashboard = () => {
         </Grid>
         {/* Financials Agent Card */}
         <Grid item xs={12} md={6} lg={4}>
-          <Card>
+          <Card sx={{ bgcolor: '#fff' }}>
             <CardContent>
               <Typography variant="h6">Financials</Typography>
               <Typography variant="body2" color="text.secondary">
@@ -56,7 +56,7 @@ const Dashboard = () => {
         </Grid>
         {/* Chemical Prices Agent Card */}
         <Grid item xs={12} md={6} lg={4}>
-          <Card>
+          <Card sx={{ bgcolor: '#fff' }}>
             <CardContent>
               <Typography variant="h6">Chemical Prices</Typography>
               <Typography variant="body2" color="text.secondary">
@@ -68,7 +68,7 @@ const Dashboard = () => {
         </Grid>
         {/* Climate Agent Card */}
         <Grid item xs={12} md={6} lg={4}>
-          <Card>
+          <Card sx={{ bgcolor: '#fff' }}>
             <CardContent>
               <Typography variant="h6">Climate</Typography>
               <Typography variant="body2" color="text.secondary">
@@ -80,7 +80,7 @@ const Dashboard = () => {
         </Grid>
         {/* Social Sentiment Agent Card */}
         <Grid item xs={12} md={6} lg={4}>
-          <Card>
+          <Card sx={{ bgcolor: '#fff' }}>
             <CardContent>
               <Typography variant="h6">Social Sentiment</Typography>
               <Typography variant="body2" color="text.secondary">
@@ -92,7 +92,7 @@ const Dashboard = () => {
         </Grid>
         {/* Regulatory Agent Card */}
         <Grid item xs={12} md={6} lg={4}>
-          <Card>
+          <Card sx={{ bgcolor: '#fff' }}>
             <CardContent>
               <Typography variant="h6">Regulatory</Typography>
               <Typography variant="body2" color="text.secondary">
