@@ -11,10 +11,14 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
 
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [newsResult, setNewsResult] = useState(null);
   const [selectedStock, setSelectedStock] = useState('');
   const [buyOrSell, setBuyOrSell] = useState('Buy'); // Can be 'Buy' or 'Sell'
@@ -43,7 +47,7 @@ const Dashboard = () => {
   return (
     <>
       <Typography variant="h4" gutterBottom>SynapseStocks Dashboard</Typography>
-      <Typography variant="body1" gutterBottom>View stock trends and agent insights here.</Typography>
+<Typography variant="body1" gutterBottom>View stock trends and agent insights here.</Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3, mt: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
   <Typography sx={{ minWidth: 100, fontWeight: 500 }}>Pharmaceutical Stock</Typography>
@@ -92,6 +96,7 @@ const Dashboard = () => {
         >
           Show My Agents
         </Button>
+
         <Chip
           label={selectedStock ? buyOrSell : 'Buy/Sell'}
           sx={{
