@@ -10,6 +10,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 
 import { useEffect, useState } from 'react';
 
@@ -91,6 +92,25 @@ const Dashboard = () => {
         >
           Show My Agents
         </Button>
+        <Chip
+          label={selectedStock ? buyOrSell : 'Buy/Sell'}
+          sx={{
+            ml: 2,
+            fontSize: '1.1rem',
+            fontWeight: 700,
+            px: 2,
+            height: 40,
+            letterSpacing: 1,
+            textTransform: 'uppercase',
+            boxShadow: 2,
+            bgcolor: '#fff',
+            border: '1.5px solid',
+            borderColor: '#e0e0e0',
+            color: !selectedStock ? '#888' : (buyOrSell === 'Buy' ? '#388e3c' : '#d32f2f'),
+          }}
+          variant="filled"
+        />
+
       </Box>
       <Grid container spacing={3} sx={{ mt: 2 }}>
         {/* News Agent Card */}
@@ -117,32 +137,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </Grid>
-        {/* Buy/Sell Card */}
-        <Grid item xs={12} md={5} lg={5}>
-          <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-            <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexGrow: 1 }}>
-              {!selectedStock ? (
-                <Typography variant="body2" sx={{ color: '#b0b0b0', fontStyle: 'italic', textAlign: 'center' }}>
-                  Select a stock to see Buy/Sell recommendation.
-                </Typography>
-              ) : (
-                <Typography
-                  variant="h2"
-                  sx={{
-                    fontWeight: 900,
-                    color: buyOrSell === 'Buy' ? '#388e3c' : '#d32f2f',
-                    fontSize: { xs: '2rem', md: '3rem' },
-                    mb: 1,
-                    letterSpacing: 2,
-                    textShadow: '0 2px 8px rgba(0,0,0,0.07)'
-                  }}
-                >
-                  {buyOrSell}
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
+        
         {/* Financials Agent Card */}
         <Grid item xs={12} md={6} lg={4}>
           <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}>
