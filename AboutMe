@@ -1,0 +1,121 @@
+# 📄 Layout Component Documentation
+
+## 🧩 Overview
+
+The `Layout` component is a reusable UI wrapper for a React application using **React Router** and **Material UI**. It provides:
+- A top navigation bar with links to key routes
+- A logout button that clears authentication and redirects to login
+- A container for rendering nested routes via `<Outlet />`
+
+---
+
+## 🚀 Features
+
+- **Navigation Bar**: Displays links to Dashboard, Agent Configurator, and Results & Insights.
+- **Logout Functionality**: Clears the `token` from `localStorage` and redirects to `/login`.
+- **Responsive Layout**: Uses Material UI's `AppBar`, `Toolbar`, and `Container` for consistent styling.
+
+---
+
+## 📦 Dependencies
+
+Make sure the following packages are installed:
+
+```bash
+npm install react-router-dom @mui/material @mui/icons-material
+```
+
+---
+
+## 🧱 Component Structure
+
+```tsx
+import * as React from 'react';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Container,
+  Box
+} from '@mui/material';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+```
+
+---
+
+## 🧭 Navigation Links
+
+Defined as an array of objects:
+
+```tsx
+const navLinks = [
+  { to: '/', label: 'Dashboard' },
+  { to: '/agents', label: 'Agent Configurator' },
+  { to: '/results', label: 'Results & Insights' },
+];
+```
+
+Each link is rendered as a Material UI `Button` with routing via `react-router-dom`.
+
+---
+
+## 🔐 Logout Button
+
+The logout button:
+- Uses a red outlined style with a logout icon
+- Clears `localStorage` token
+- Redirects to `/login` using `useNavigate`
+
+```tsx
+<Button
+  variant="outlined"
+  color="error"
+  startIcon={<LogoutOutlinedIcon />}
+  onClick={() => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  }}
+>
+  Logout
+</Button>
+```
+
+---
+
+## 🧩 Outlet Usage
+
+The `<Outlet />` component renders nested routes defined in your router configuration.
+
+```tsx
+<Container sx={{ mt: 4 }}>
+  <Outlet />
+</Container>
+```
+
+---
+
+## 📁 File Location Suggestion
+
+Place this component in:
+
+```
+/src/components/Layout.jsx
+```
+
+And import it in your route configuration:
+
+```tsx
+<Route path="/" element={<Layout />}>
+  {/* nested routes */}
+</Route>
+```
+
+---
+
+## 🧹 Cleanup & Notes
+
+- There are duplicate imports and some malformed JSX in the original code. Ensure you remove:
+  - Duplicate `Link` and `Outlet` imports
+  - Duplicate `Layout` function declarations
+  - Misplaced `Button` rendering inside `map()` loop
