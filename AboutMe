@@ -1,3 +1,140 @@
+# 📊 SynapseStocks Dashboard
+
+## 🧩 Overview
+
+This documentation covers two key components of the SynapseStocks application:
+
+- **Dashboard**: A dynamic interface for viewing stock trends and agent insights.
+- **Layout**: A reusable navigation wrapper with routing and logout functionality.
+
+Built using **React**, **React Router**, and **Material UI**, these components provide a clean and interactive user experience.
+
+---
+
+## 🧠 Dashboard Component
+
+### 📍 Location
+`client/src/components/Dashboard.js`
+
+### 🚀 Features
+- Displays a title and description for the dashboard.
+- Allows users to select a pharmaceutical stock and choose between "Buy" or "Sell".
+- Includes a button to navigate to the Agent Configurator.
+- Shows a contextual chip indicating the selected action.
+
+### 🧱 Code Structure
+
+```tsx
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Typography,
+  Box,
+  Select,
+  MenuItem,
+  Button,
+  Chip,
+  AppBar,
+  Toolbar
+} from '@mui/material';
+```
+
+### 🔧 State Variables
+
+| Variable         | Type     | Description                                |
+|------------------|----------|--------------------------------------------|
+| `newsResult`     | `null`   | Placeholder for fetched news data          |
+| `selectedStock`  | `string` | Tracks selected pharmaceutical stock       |
+| `buyOrSell`      | `string` | Tracks user's action: `"Buy"` or `"Sell"`  |
+
+### 📦 UI Elements
+
+- **Typography**: Displays headings and descriptions.
+- **Select + MenuItem**: Dropdown for stock selection.
+- **Button**: "Show My Agents" navigates to `/agents`.
+- **Chip**: Displays current action (Buy/Sell) based on selection.
+
+---
+
+## 🧭 Layout Component
+
+### 📍 Location
+`client/src/components/Layout.js`
+
+### 🚀 Features
+- Top navigation bar with links to:
+  - Dashboard (`/`)
+  - Agent Configurator (`/agents`)
+  - Results & Insights (`/results`)
+- Logout button that:
+  - Clears `localStorage` token
+  - Redirects to `/login`
+- Renders nested routes via `<Outlet />`
+
+### 🧱 Code Structure
+
+```tsx
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  Container,
+  Box
+} from '@mui/material';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+```
+
+### 🔗 Navigation Links
+
+```tsx
+const navLinks = [
+  { to: '/', label: 'Dashboard' },
+  { to: '/agents', label: 'Agent Configurator' },
+  { to: '/results', label: 'Results & Insights' },
+];
+```
+
+### 🔐 Logout Button
+
+Styled with Material UI and includes an icon:
+
+```tsx
+<Button
+  variant="outlined"
+  color="error"
+  startIcon={<LogoutOutlinedIcon />}
+  onClick={() => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  }}
+>
+  Logout
+</Button>
+```
+
+### 🧩 Outlet Usage
+
+Renders child routes inside a styled container:
+
+```tsx
+<Container sx={{ mt: 4 }}>
+  <Outlet />
+</Container>
+```
+
+---
+
+## 🧹 Notes & Suggestions
+
+- ✅ Clean up duplicate imports and malformed JSX in `Layout.js`.
+- ✅ Consider separating navigation and logout logic for clarity.
+- ✅ Add error handling for stock selection or navigation if needed.
+
+---
+
+
+
 # 📄 Layout Component Documentation
 
 ## 🧩 Overview
