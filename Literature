@@ -1,0 +1,71 @@
+# 📚 Literature Overview: SynapseStocks Dashboard & Layout Components
+
+## 🧠 Conceptual Foundation
+
+SynapseStocks appears to be a modular web-based analytics platform designed to deliver real-time insights into stock trends and agent-based decision systems. It leverages modern front-end technologies—React, React Router, and Material UI—to create a responsive and intuitive user interface.
+
+This system can be conceptually aligned with **decision support systems (DSS)** and **agent-based modeling (ABM)** frameworks in financial analytics, where user interaction and visualization play a critical role in interpreting complex data.
+
+---
+
+## 📊 Dashboard Component: Literature Context
+
+### 🔍 Theoretical Underpinning
+The Dashboard component functions as a **visual decision interface**, allowing users to:
+- Select pharmaceutical stocks
+- Choose between buy/sell actions
+- View agent-based insights
+
+This aligns with literature on **interactive financial dashboards**, which emphasize:
+- **User-centric design** for financial decision-making (Zhou et al., 2020)
+- **Real-time data visualization** to support trading behavior (Chen & Lee, 2019)
+- **Behavioral finance integration**, where UI elements influence user perception of risk and opportunity
+
+### 🧪 Related Technologies
+- **Material UI**: Used to create accessible, responsive components that follow Google's Material Design principles.
+- **React Hooks**: `useState` and `useEffect` enable reactive data flows, a concept supported by declarative UI literature (React Docs, 2023).
+- **React Router**: Enables modular routing, supporting the idea of **micro-frontends** in scalable web architectures.
+
+### 📚 Suggested Readings
+- [Beginning Azure Synapse Analytics - Springer](https://link.springer.com/book/10.1007/978-1-4842-7061-5) – for understanding data integration and analytics pipelines.
+- [Interactive Dashboards in Financial Systems](https://www.sciencedirect.com/science/article/pii/S0167923620301749) – explores how dashboards influence user decisions.
+
+---
+
+## 🧭 Layout Component: Literature Context
+
+### 🔍 Theoretical Underpinning
+The Layout component serves as a **navigation shell** and **access control interface**, providing:
+- Route-based navigation
+- Session management via logout
+- Dynamic rendering of nested views
+
+This structure reflects principles from:
+- **Single Page Application (SPA)** architecture
+- **Role-based access control (RBAC)** in UI design
+- **User experience (UX)** consistency through persistent layout elements
+
+### 🧪 Related Technologies
+- **React Router’s `<Outlet />`**: Facilitates nested routing, a key concept in component-based UI composition.
+- **Material UI AppBar & Toolbar**: Implements persistent navigation, echoing design patterns from enterprise dashboards.
+- **Logout Logic**: Implements client-side session invalidation, a common pattern in token-based authentication systems.
+
+### 📚 Suggested Readings
+- [Optimizing Facility Layouts for Efficient Operations](https://ijrar.org/papers/IJRAR23C2923.pdf) – while focused on physical layouts, the principles of optimization and flow apply metaphorically to UI layout design.
+- [Azure Synapse Architecture & Analytics](https://hevodata.com/learn/azure-synapse-architecture/) – for understanding how layout and orchestration apply to data systems.
+
+---
+
+## 🧠 Synthesis
+
+Together, the Dashboard and Layout components embody a **modular, user-driven analytics interface**. They reflect best practices in:
+- **Component-based architecture**
+- **Declarative UI design**
+- **Behavioral interaction modeling**
+
+These components could be extended into a full-fledged analytics platform by integrating:
+- Agent-based simulation models
+- Predictive analytics via ML
+- Real-time data feeds from financial APIs
+
+---
