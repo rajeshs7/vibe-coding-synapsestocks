@@ -16,6 +16,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useEffect, useState } from 'react';
 
 const Dashboard = () => {
@@ -153,7 +154,9 @@ const Dashboard = () => {
                 <Card
                   sx={{
                     bgcolor: '#fff',
-                    minHeight: 220,
+                    height: 260,
+                    minHeight: 260,
+                    maxHeight: 260,
                     borderRadius: 3,
                     boxShadow: 4,
                     display: 'flex',
@@ -205,7 +208,9 @@ const Dashboard = () => {
               <Card
                 sx={{
                   bgcolor: '#fff',
-                  minHeight: 220,
+                  height: 260,
+                  minHeight: 260,
+                  maxHeight: 260,
                   borderRadius: 3,
                   boxShadow: 4,
                   display: 'flex',
@@ -272,10 +277,10 @@ const Dashboard = () => {
           color="primary"
           size="medium"
           disabled={!selectedStock || loading}
-          sx={{ borderRadius: (theme) => theme.shape.borderRadius, fontWeight: 600, px: 3, boxShadow: 2 }}
+          sx={{ borderRadius: (theme) => theme.shape.borderRadius, fontWeight: 600, px: 3, boxShadow: 2, minWidth: 130 }}
           onClick={handleGetInsights}
         >
-          {loading ? 'Analyzing...' : 'Get Insights'}
+          {loading ? <CircularProgress size={24} color="inherit" thickness={5} /> : 'Get Insights'}
         </Button>
         <Button
           variant="contained"
@@ -337,7 +342,7 @@ const Dashboard = () => {
       {stockAnalysis && (
         <Box sx={{ mt: 2, mb: 1 }}>
           <Typography variant="h6" sx={{ color: '#fff', fontWeight: 600 }}>
-            Analysis for: {stockAnalysis?.Stock || selectedStock}. Below are the factors affecting the stock.
+            Analysis for: {stockAnalysis?.Stock || selectedStock}. Below are the factors affecting the stock - LIVE.
           </Typography>
         </Box>
       )}
