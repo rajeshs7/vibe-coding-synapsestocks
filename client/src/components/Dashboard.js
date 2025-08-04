@@ -85,12 +85,45 @@ const Dashboard = () => {
 
   // Card type to icon and color mapping
   const cardMeta = {
-    News: { icon: <NewspaperIcon sx={{ color: '#1976d2' }} />, color: 'linear-gradient(90deg,#e3f2fd,#fff)' },
-    Financials: { icon: <PaidIcon sx={{ color: '#388e3c' }} />, color: 'linear-gradient(90deg,#e8f5e9,#fff)' },
-    'Chemical Prices': { icon: <ScienceIcon sx={{ color: '#ff9800' }} />, color: 'linear-gradient(90deg,#fff3e0,#fff)' },
-    Climate: { icon: <CloudIcon sx={{ color: '#0288d1' }} />, color: 'linear-gradient(90deg,#e1f5fe,#fff)' },
-    'Social Sentiment': { icon: <EmojiEmotionsIcon sx={{ color: '#fbc02d' }} />, color: 'linear-gradient(90deg,#fffde7,#fff)' },
-    Regulatory: { icon: <GavelIcon sx={{ color: '#7b1fa2' }} />, color: 'linear-gradient(90deg,#f3e5f5,#fff)' },
+    News: {
+      image: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+      icon: <NewspaperIcon sx={{ color: '#1976d2', fontSize: 36 }} />,
+      color: 'linear-gradient(90deg,#e3f2fd,#fff)'
+    },
+    Financials: {
+      image: 'https://cdn-icons-png.flaticon.com/512/1907/1907559.png',
+      icon: <PaidIcon sx={{ color: '#388e3c', fontSize: 36 }} />,
+      color: 'linear-gradient(90deg,#e8f5e9,#fff)'
+    },
+    'Chemical Prices': {
+      image: 'https://cdn-icons-png.flaticon.com/512/2910/2910791.png',
+      icon: <ScienceIcon sx={{ color: '#ff9800', fontSize: 36 }} />,
+      color: 'linear-gradient(90deg,#fff3e0,#fff)'
+    },
+    Climate: {
+      image: 'https://cdn-icons-png.flaticon.com/512/414/414974.png',
+      icon: <CloudIcon sx={{ color: '#0288d1', fontSize: 36 }} />,
+      color: 'linear-gradient(90deg,#e1f5fe,#fff)'
+    },
+    'Social Sentiment': {
+      image: 'https://cdn-icons-png.flaticon.com/512/2583/2583346.png',
+      icon: <EmojiEmotionsIcon sx={{ color: '#fbc02d', fontSize: 36 }} />,
+      color: 'linear-gradient(90deg,#fffde7,#fff)'
+    },
+    Regulatory: {
+      image: 'https://cdn-icons-png.flaticon.com/512/942/942748.png',
+      icon: <GavelIcon sx={{ color: '#7b1fa2', fontSize: 36 }} />,
+      color: 'linear-gradient(90deg,#f3e5f5,#fff)'
+    },
+  };
+
+
+  // Helper to render icon or image in card header
+  const renderCardVisual = (meta) => {
+    if (meta && meta.image) {
+      return <img src={meta.image} alt="card" style={{ width: 38, height: 38, objectFit: 'contain', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }} />;
+    }
+    return meta && meta.icon ? meta.icon : null;
   };
 
   const renderDashboardCards = () => {
@@ -114,9 +147,9 @@ const Dashboard = () => {
                     '&:hover': { boxShadow: 8, transform: 'translateY(-3px) scale(1.025)' },
                   }}
                 >
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, p: 1.2, borderTopLeftRadius: 12, borderTopRightRadius: 12, background: meta.color || '#f5f5f5' }}>
-                    {meta.icon}
-                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#333' }}>{title}</Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 1, p: 1.2, borderTopLeftRadius: 12, borderTopRightRadius: 12, background: meta.color || '#f5f5f5' }}>
+                    {renderCardVisual(meta)}
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#333', textAlign: 'center', width: '100%' }}>{title}</Typography>
                   </Box>
                   <CardContent>
                     <Typography variant="body2" sx={{ color: '#b0b0b0', fontStyle: 'italic', textAlign: 'center' }}>
@@ -149,9 +182,9 @@ const Dashboard = () => {
                   '&:hover': { boxShadow: 8, transform: 'translateY(-3px) scale(1.025)' },
                 }}
               >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, p: 1.2, borderTopLeftRadius: 12, borderTopRightRadius: 12, background: meta.color || '#f5f5f5' }}>
-                  {meta.icon}
-                  <Typography variant="h6" sx={{ fontWeight: 700, color: '#333' }}>{value?.Headline || key}</Typography>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 1, p: 1.2, borderTopLeftRadius: 12, borderTopRightRadius: 12, background: meta.color || '#f5f5f5' }}>
+                  {renderCardVisual(meta)}
+                  <Typography variant="h6" sx={{ fontWeight: 700, color: '#333', textAlign: 'center', width: '100%' }}>{value?.Headline || key}</Typography>
                 </Box>
                 <CardContent>
                   <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1.08rem', lineHeight: 1.6 }}>
