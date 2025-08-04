@@ -118,6 +118,22 @@ const Dashboard = () => {
   };
 
 
+  // Fallback image for unknown types
+  const fallbackImage = 'https://cdn-icons-png.flaticon.com/512/565/565547.png';
+
+  // Helper to normalize keys (lowercase, remove spaces/underscores)
+  const normalizeKey = (str) => (str || '').toLowerCase().replace(/\s|_/g, '');
+
+  // Helper to get cardMeta by normalized key
+  const getCardMeta = (key) => {
+    if (!key) return {};
+    const nKey = normalizeKey(key);
+    const found = Object.entries(cardMeta).find(([metaKey]) => normalizeKey(metaKey) === nKey);
+    if (found) return found[1];
+    return { image: fallbackImage };
+  };
+
+
   // Helper to render icon or image in card header
   const renderCardVisual = (meta) => {
     if (meta && meta.image) {
@@ -131,9 +147,9 @@ const Dashboard = () => {
       return (
         <Grid container spacing={3} sx={{ mt: 2 }}>
           {['News', 'Financials', 'Chemical Prices', 'Climate', 'Social Sentiment', 'Regulatory'].map((title) => {
-            const meta = cardMeta[title] || {};
+            const meta = getCardMeta(title);
             return (
-              <Grid item xs={12} md={6} lg={4} key={title}>
+              <Grid item xs={12} md={4} lg={4} key={title}>
                 <Card
                   sx={{
                     bgcolor: '#fff',
@@ -166,9 +182,11 @@ const Dashboard = () => {
     return (
       <Grid container spacing={3} sx={{ mt: 2 }}>
         {Object.entries(stockAnalysis.Dashboard).map(([key, value]) => {
-          const meta = cardMeta[key] || {};
+          const meta = getCardMeta(key);
+          // Debug: log the key and meta used
+          // console.log('Card:', key, meta);
           return (
-            <Grid item xs={12} md={6} lg={4} key={key}>
+            <Grid item xs={12} md={4} lg={4} key={key}>
               <Card
                 sx={{
                   bgcolor: '#fff',
