@@ -6,22 +6,18 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const [newsResult, setNewsResult] = useState(null);
   const [selectedStock, setSelectedStock] = useState('');
   const [buyOrSell, setBuyOrSell] = useState('Buy'); // Can be 'Buy' or 'Sell'
+  const [stockAnalysis, setStockAnalysis] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!selectedStock) {
@@ -37,11 +33,86 @@ const Dashboard = () => {
 
   const handleStockChange = (event) => {
     setSelectedStock(event.target.value);
+    setStockAnalysis(null); // Reset analysis when stock changes
+    setBuyOrSell('Buy'); // Reset recommendation
   };
 
-  const handleGetInsights = () => {
-    // Placeholder for future integration
-    // Could trigger fetches or analytics based on selectedStock
+  const handleGetInsights = async () => {
+    if (!selectedStock) return;
+    
+    setLoading(true);
+    try {
+      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+      const response = await fetch(`${API_URL}/api/neurosan/stock-analysis`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          stock: selectedStock
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      if (!data.response || !data.response.text) {
+        throw new Error('Invalid API response format');
+      }
+      
+      const analysisData = JSON.parse(data.response.text);
+      if (!analysisData.Dashboard || !analysisData.Actions || !analysisData.Actions[0]) {
+        throw new Error('Invalid analysis data format');
+      }
+      
+      setStockAnalysis(analysisData);
+      setBuyOrSell(analysisData.Actions[0]);
+    } catch (error) {
+      console.error('Error fetching stock analysis:', error);
+      setStockAnalysis(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderDashboardCards = () => {
+    if (!stockAnalysis || !stockAnalysis.Dashboard) {
+      return (
+        <Grid container spacing={3} sx={{ mt: 2 }}>
+          {['News', 'Financials', 'Chemical Prices', 'Climate', 'Social Sentiment', 'Regulatory'].map((title) => (
+            <Grid item xs={12} md={6} lg={4} key={title}>
+              <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}>
+                <CardContent>
+                  <Typography variant="h6">{title}</Typography>
+                  <Typography variant="body2" sx={{ color: '#b0b0b0', fontStyle: 'italic', textAlign: 'center' }}>
+                    {!selectedStock ? 'Select a stock to view insights.' : 'Click "Get Insights" to analyze.'}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      );
+    }
+
+    return (
+      <Grid container spacing={3} sx={{ mt: 2 }}>
+        {Object.entries(stockAnalysis.Dashboard).map(([key, value]) => (
+          <Grid item xs={12} md={6} lg={4} key={key}>
+            <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}>
+              <CardContent>
+                <Typography variant="h6" sx={{ mb: 1 }}>{value?.Headline || key}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {value?.Summary || 'No summary available'}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    );
   };
 
   return (
@@ -50,10 +121,10 @@ const Dashboard = () => {
 <Typography variant="body1" gutterBottom>View stock trends and agent insights here.</Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3, mt: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-  <Typography sx={{ minWidth: 100, fontWeight: 500 }}>Pharmaceutical Stock</Typography>
+  <Typography sx={{ minWidth: 100, fontWeight: 500 }}>Select Stock</Typography>
   <FormControl sx={{ minWidth: 180 }} size="small">
     <Select
-      id="pharma-stock-select"
+      id="stock-select"
       value={selectedStock}
       onChange={handleStockChange}
       sx={{
@@ -70,11 +141,12 @@ const Dashboard = () => {
       }}
     >
       <MenuItem value="">Select</MenuItem>
-      <MenuItem value={'PFE'}>Pfizer (PFE)</MenuItem>
-      <MenuItem value={'MRK'}>Merck (MRK)</MenuItem>
+      <MenuItem value={'AAPL'}>Apple (AAPL)</MenuItem>
+      <MenuItem value={'MSFT'}>Microsoft (MSFT)</MenuItem>
+      <MenuItem value={'TSLA'}>Tesla (TSLA)</MenuItem>
       <MenuItem value={'JNJ'}>Johnson & Johnson (JNJ)</MenuItem>
-      <MenuItem value={'NVS'}>Novartis (NVS)</MenuItem>
-      <MenuItem value={'AZN'}>AstraZeneca (AZN)</MenuItem>
+      <MenuItem value={'PFE'}>Pfizer (PFE)</MenuItem>
+      <MenuItem value={'XOM'}>Exxon Mobil (XOM)</MenuItem>
     </Select>
   </FormControl>
 </Box>
@@ -82,10 +154,11 @@ const Dashboard = () => {
           variant="contained"
           color="primary"
           size="medium"
+          disabled={!selectedStock || loading}
           sx={{ borderRadius: (theme) => theme.shape.borderRadius, fontWeight: 600, px: 3, boxShadow: 2 }}
           onClick={handleGetInsights}
         >
-          Get Insights
+          {loading ? 'Analyzing...' : 'Get Insights'}
         </Button>
         <Button
           variant="contained"
@@ -97,144 +170,62 @@ const Dashboard = () => {
           Show My Agents
         </Button>
 
-        <Chip
-          label={selectedStock ? buyOrSell : 'Buy/Sell'}
-          sx={{
-            ml: 2,
-            fontSize: '1.1rem',
-            fontWeight: 700,
-            px: 2,
-            height: 40,
-            letterSpacing: 1,
-            textTransform: 'uppercase',
-            boxShadow: 2,
-            bgcolor: '#fff',
-            border: '1.5px solid',
-            borderColor: '#e0e0e0',
-            color: !selectedStock ? '#888' : (buyOrSell === 'Buy' ? '#388e3c' : '#d32f2f'),
-          }}
-          variant="filled"
-        />
+        {stockAnalysis && (
+          <Button
+            variant="contained"
+            size="medium"
+            sx={{
+              ml: 2,
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              px: 3,
+              height: 40,
+              letterSpacing: 1,
+              textTransform: 'uppercase',
+              boxShadow: 2,
+              bgcolor: buyOrSell === 'BUY' ? '#388e3c' : buyOrSell === 'SELL' ? '#d32f2f' : '#ff9800',
+              '&:hover': {
+                bgcolor: buyOrSell === 'BUY' ? '#2e7d32' : buyOrSell === 'SELL' ? '#c62828' : '#f57c00',
+              }
+            }}
+            onClick={() => alert(`Action: ${buyOrSell} ${selectedStock}`)}
+          >
+            {buyOrSell}
+          </Button>
+        )}
+        
+        {!stockAnalysis && (
+          <Chip
+            label={selectedStock ? 'Analyze' : 'Select Stock'}
+            sx={{
+              ml: 2,
+              fontSize: '1.1rem',
+              fontWeight: 700,
+              px: 2,
+              height: 40,
+              letterSpacing: 1,
+              textTransform: 'uppercase',
+              boxShadow: 2,
+              bgcolor: '#fff',
+              border: '1.5px solid',
+              borderColor: '#e0e0e0',
+              color: '#888',
+            }}
+            variant="filled"
+          />
+        )}
 
       </Box>
-      <Grid container spacing={3} sx={{ mt: 2 }}>
-        {/* News Agent Card */}
-        <Grid item xs={12} md={2} lg={2}>
-          <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}>
-            <CardContent>
-              <Typography variant="h6" sx={{ mb: 1 }}>News</Typography>
-              {!selectedStock ? (
-                <Typography variant="body2" sx={{ color: '#b0b0b0', fontStyle: 'italic', textAlign: 'center' }}>
-                  Select a stock to view news.
-                </Typography>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  {newsResult ? (
-                    <>
-                      <b>Headline:</b> <span style={{color: '#388e3c'}}>{newsResult.headlines[0]}</span><br/>
-                      <b>Summary:</b> <span style={{color: '#388e3c'}}>{newsResult.summary}</span>
-                    </>
-                  ) : (
-                    <>Loading news...</>
-                  )}
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        
-        {/* Financials Agent Card */}
-        <Grid item xs={12} md={6} lg={4}>
-          <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}>
-            <CardContent>
-              <Typography variant="h6">Financials</Typography>
-              {!selectedStock ? (
-                <Typography variant="body2" sx={{ color: '#b0b0b0', fontStyle: 'italic', textAlign: 'center' }}>
-                  Select a stock to view financials.
-                </Typography>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  <b>Q2 Revenue:</b> <span style={{color: '#388e3c'}}>$2.1B (+12%)</span><br/>
-                  <b>EPS:</b> <span style={{color: '#388e3c'}}>$1.34</span><br/>
-                  <b>Forecast:</b> <span style={{color: '#388e3c'}}>Bullish</span>
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        {/* Chemical Prices Agent Card */}
-        <Grid item xs={12} md={6} lg={4}>
-          <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}>
-            <CardContent>
-              <Typography variant="h6">Chemical Prices</Typography>
-              {!selectedStock ? (
-                <Typography variant="body2" sx={{ color: '#b0b0b0', fontStyle: 'italic', textAlign: 'center' }}>
-                  Select a stock to view chemical prices.
-                </Typography>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  <b>API Price:</b> <span style={{color: '#d32f2f'}}>$320/kg (↓ 5%)</span><br/>
-                  <b>Solvent Cost:</b> <span style={{color: '#388e3c'}}>$45/drum (↑ 2%)</span>
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        {/* Climate Agent Card */}
-        <Grid item xs={12} md={6} lg={4}>
-          <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}>
-            <CardContent>
-              <Typography variant="h6">Climate</Typography>
-              {!selectedStock ? (
-                <Typography variant="body2" sx={{ color: '#b0b0b0', fontStyle: 'italic', textAlign: 'center' }}>
-                  Select a stock to view climate impact.
-                </Typography>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  <b>Event:</b> Heavy rains in Andhra Pradesh<br/>
-                  <b>Impact:</b> <span style={{color: '#d32f2f'}}>Minor delays in raw material delivery</span>
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        {/* Social Sentiment Agent Card */}
-        <Grid item xs={12} md={6} lg={4}>
-          <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}>
-            <CardContent>
-              <Typography variant="h6">Social Sentiment</Typography>
-              {!selectedStock ? (
-                <Typography variant="body2" sx={{ color: '#b0b0b0', fontStyle: 'italic', textAlign: 'center' }}>
-                  Select a stock to view social sentiment.
-                </Typography>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  <b>Sentiment:</b> <span style={{color: '#388e3c'}}>62% Positive</span><br/>
-                  <b>Trending:</b> #PharmaCorpSuccess
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-        {/* Regulatory Agent Card */}
-        <Grid item xs={12} md={6} lg={4}>
-          <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}>
-            <CardContent>
-              <Typography variant="h6">Regulatory</Typography>
-              {!selectedStock ? (
-                <Typography variant="body2" sx={{ color: '#b0b0b0', fontStyle: 'italic', textAlign: 'center' }}>
-                  Select a stock to view regulatory updates.
-                </Typography>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  <b>Recent:</b> <span style={{color: '#388e3c'}}>FDA inspection passed</span><br/>
-                  <b>Upcoming:</b> <span style={{color: '#1976d2'}}>EMA review in August</span>
-                </Typography>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      
+      {stockAnalysis && (
+        <Box sx={{ mt: 2, mb: 1 }}>
+          <Typography variant="h6" sx={{ color: '#1976d2', fontWeight: 600 }}>
+            Analysis for: {stockAnalysis?.Stock || selectedStock}
+          </Typography>
+        </Box>
+      )}
+      
+      {renderDashboardCards()}
     </>
   );
 };

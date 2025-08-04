@@ -42,6 +42,34 @@ app.get('/api/agent/news', async (req, res) => {
   res.json(result);
 });
 
+// Proxy endpoint for NeuroSAN stock evaluator
+app.post('/api/neurosan/stock-analysis', async (req, res) => {
+  try {
+    const { stock } = req.body;
+    if (!stock) {
+      return res.status(400).json({ error: 'Missing stock symbol' });
+    }
+
+    const response = await fetch('http://localhost:8080/api/v1/stock_evaluator/streaming_chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_message: {
+          text: stock
+        }
+      })
+    });
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('NeuroSAN proxy error:', error);
+    res.status(500).json({ error: 'Failed to fetch stock analysis' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

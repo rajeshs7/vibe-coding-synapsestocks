@@ -54,3 +54,43 @@ server/coverage/
 
 # Misc
 *.log
+
+# NeuroSAN Python specific
+neuro-san/venv/
+neuro-san/venv2/
+neuro-san/venv3/
+neuro-san/.venv/
+neuro-san/__pycache__/
+neuro-san/**/__pycache__/
+neuro-san/*.pyc
+neuro-san/**/*.pyc
+neuro-san/*.py[cod]
+neuro-san/**/*.py[cod]
+neuro-san/*$py.class
+neuro-san/**/*$py.class
+neuro-san/dist/
+neuro-san/build/
+neuro-san/*.egg-info/
+neuro-san/.requirements-wheels/
+neuro-san/neuro_san/.requirements-wheels/
+neuro-san/.idea/
+neuro-san/*.swp
+neuro-san/**/site/
+neuro-san/tmp_*
+neuro-san/neuro_san/api/grpc/openapi.yaml
+
+# Azure OpenAI credentials
+.azure/
+neuro-san/.env
+neuro-san/.env.local
+neuro-san/.env.production
+
+# Agent thinking files and logs
+/tmp/agent_thinking/
+neuro-san/agent_thinking/
+*.thinking
+
+# Model cache and temporary files
+neuro-san/.cache/
+neuro-san/models/
+neuro-san/checkpoints/
