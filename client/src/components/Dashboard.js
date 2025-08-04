@@ -179,12 +179,27 @@ const Dashboard = () => {
         </Grid>
       );
     }
+    // Helper to determine feedback color
+    const getFeedbackColor = (text) => {
+      if (!text) return undefined;
+      const t = text.toLowerCase();
+      // Positive keywords
+      if (/\b(positive|bullish|growth|increase|passed|success|up|gain|improve|surge|beat|profit|approve|expansion|good|stable|strong|record|optimistic|outperform|progress)\b|\+\d|\+\d+%/.test(t)) {
+        return '#388e3c'; // green
+      }
+      // Negative keywords
+      if (/\b(negative|bearish|decline|decrease|failed|delay|down|loss|drop|fall|miss|deficit|risk|recall|cut|weak|losses|concern|volatile|underperform|warning|problem)\b|\-\d|\-\d+%/.test(t)) {
+        return '#d32f2f'; // red
+      }
+      return undefined;
+    };
+
     return (
       <Grid container spacing={3} sx={{ mt: 2 }}>
         {Object.entries(stockAnalysis.Dashboard).map(([key, value]) => {
           const meta = getCardMeta(key);
-          // Debug: log the key and meta used
-          // console.log('Card:', key, meta);
+          const summary = value?.Summary || 'No summary available';
+          const feedbackColor = getFeedbackColor(summary);
           return (
             <Grid item xs={12} md={4} lg={4} key={key}>
               <Card
@@ -205,8 +220,8 @@ const Dashboard = () => {
                   <Typography variant="h6" sx={{ fontWeight: 700, color: '#333', textAlign: 'center', width: '100%' }}>{value?.Headline || key}</Typography>
                 </Box>
                 <CardContent>
-                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1.08rem', lineHeight: 1.6 }}>
-                    {value?.Summary || 'No summary available'}
+                  <Typography variant="body2" sx={{ fontSize: '1.08rem', lineHeight: 1.6, color: feedbackColor ? feedbackColor : 'text.secondary' }}>
+                    {summary}
                   </Typography>
                 </CardContent>
               </Card>
