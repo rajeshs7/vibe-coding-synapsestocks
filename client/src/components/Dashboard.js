@@ -336,8 +336,8 @@ const Dashboard = () => {
       
       {stockAnalysis && (
         <Box sx={{ mt: 2, mb: 1 }}>
-          <Typography variant="h6" sx={{ color: '#1976d2', fontWeight: 600 }}>
-            Analysis for: {stockAnalysis?.Stock || selectedStock}
+          <Typography variant="h6" sx={{ color: '#fff', fontWeight: 600 }}>
+            Analysis for: {stockAnalysis?.Stock || selectedStock}. Below are the factors affecting the stock.
           </Typography>
         </Box>
       )}
