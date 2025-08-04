@@ -5,6 +5,12 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import NewspaperIcon from '@mui/icons-material/NewspaperOutlined';
+import PaidIcon from '@mui/icons-material/PaidOutlined';
+import ScienceIcon from '@mui/icons-material/ScienceOutlined';
+import CloudIcon from '@mui/icons-material/CloudOutlined';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotionsOutlined';
+import GavelIcon from '@mui/icons-material/GavelOutlined';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -77,40 +83,85 @@ const Dashboard = () => {
     }
   };
 
+  // Card type to icon and color mapping
+  const cardMeta = {
+    News: { icon: <NewspaperIcon sx={{ color: '#1976d2' }} />, color: 'linear-gradient(90deg,#e3f2fd,#fff)' },
+    Financials: { icon: <PaidIcon sx={{ color: '#388e3c' }} />, color: 'linear-gradient(90deg,#e8f5e9,#fff)' },
+    'Chemical Prices': { icon: <ScienceIcon sx={{ color: '#ff9800' }} />, color: 'linear-gradient(90deg,#fff3e0,#fff)' },
+    Climate: { icon: <CloudIcon sx={{ color: '#0288d1' }} />, color: 'linear-gradient(90deg,#e1f5fe,#fff)' },
+    'Social Sentiment': { icon: <EmojiEmotionsIcon sx={{ color: '#fbc02d' }} />, color: 'linear-gradient(90deg,#fffde7,#fff)' },
+    Regulatory: { icon: <GavelIcon sx={{ color: '#7b1fa2' }} />, color: 'linear-gradient(90deg,#f3e5f5,#fff)' },
+  };
+
   const renderDashboardCards = () => {
     if (!stockAnalysis || !stockAnalysis.Dashboard) {
       return (
         <Grid container spacing={3} sx={{ mt: 2 }}>
-          {['News', 'Financials', 'Chemical Prices', 'Climate', 'Social Sentiment', 'Regulatory'].map((title) => (
-            <Grid item xs={12} md={6} lg={4} key={title}>
-              <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}>
+          {['News', 'Financials', 'Chemical Prices', 'Climate', 'Social Sentiment', 'Regulatory'].map((title) => {
+            const meta = cardMeta[title] || {};
+            return (
+              <Grid item xs={12} md={6} lg={4} key={title}>
+                <Card
+                  sx={{
+                    bgcolor: '#fff',
+                    minHeight: 220,
+                    borderRadius: 3,
+                    boxShadow: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'stretch',
+                    transition: 'transform 0.18s, box-shadow 0.18s',
+                    '&:hover': { boxShadow: 8, transform: 'translateY(-3px) scale(1.025)' },
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, p: 1.2, borderTopLeftRadius: 12, borderTopRightRadius: 12, background: meta.color || '#f5f5f5' }}>
+                    {meta.icon}
+                    <Typography variant="h6" sx={{ fontWeight: 700, color: '#333' }}>{title}</Typography>
+                  </Box>
+                  <CardContent>
+                    <Typography variant="body2" sx={{ color: '#b0b0b0', fontStyle: 'italic', textAlign: 'center' }}>
+                      {!selectedStock ? 'Select a stock to view insights.' : 'Click "Get Insights" to analyze.'}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            );
+          })}
+        </Grid>
+      );
+    }
+    return (
+      <Grid container spacing={3} sx={{ mt: 2 }}>
+        {Object.entries(stockAnalysis.Dashboard).map(([key, value]) => {
+          const meta = cardMeta[key] || {};
+          return (
+            <Grid item xs={12} md={6} lg={4} key={key}>
+              <Card
+                sx={{
+                  bgcolor: '#fff',
+                  minHeight: 220,
+                  borderRadius: 3,
+                  boxShadow: 4,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'stretch',
+                  transition: 'transform 0.18s, box-shadow 0.18s',
+                  '&:hover': { boxShadow: 8, transform: 'translateY(-3px) scale(1.025)' },
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1, p: 1.2, borderTopLeftRadius: 12, borderTopRightRadius: 12, background: meta.color || '#f5f5f5' }}>
+                  {meta.icon}
+                  <Typography variant="h6" sx={{ fontWeight: 700, color: '#333' }}>{value?.Headline || key}</Typography>
+                </Box>
                 <CardContent>
-                  <Typography variant="h6">{title}</Typography>
-                  <Typography variant="body2" sx={{ color: '#b0b0b0', fontStyle: 'italic', textAlign: 'center' }}>
-                    {!selectedStock ? 'Select a stock to view insights.' : 'Click "Get Insights" to analyze.'}
+                  <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1.08rem', lineHeight: 1.6 }}>
+                    {value?.Summary || 'No summary available'}
                   </Typography>
                 </CardContent>
               </Card>
             </Grid>
-          ))}
-        </Grid>
-      );
-    }
-
-    return (
-      <Grid container spacing={3} sx={{ mt: 2 }}>
-        {Object.entries(stockAnalysis.Dashboard).map(([key, value]) => (
-          <Grid item xs={12} md={6} lg={4} key={key}>
-            <Card sx={{ bgcolor: '#fff', minHeight: 220, display: 'flex', flexDirection: 'column', justifyContent: 'stretch' }}>
-              <CardContent>
-                <Typography variant="h6" sx={{ mb: 1 }}>{value?.Headline || key}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {value?.Summary || 'No summary available'}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+          );
+        })}
       </Grid>
     );
   };
