@@ -42,6 +42,43 @@ app.get('/api/agent/news', async (req, res) => {
   res.json(result);
 });
 
+// Stock price endpoint with mock data
+app.get('/api/stock/price', (req, res) => {
+  const { symbol } = req.query;
+  if (!symbol) {
+    return res.status(400).json({ error: 'Missing stock symbol in query params.' });
+  }
+
+  // Mock stock data for the requested stocks
+  const mockStockData = {
+    AAPL: { price: 182.52, change: 1.35, changePercent: 0.74, high: 184.12, low: 180.89, volume: 45234567 },
+    MSFT: { price: 378.85, change: -2.15, changePercent: -0.56, high: 382.45, low: 376.23, volume: 28756432 },
+    TSLA: { price: 248.42, change: 4.87, changePercent: 1.99, high: 251.78, low: 243.56, volume: 67832145 },
+    JNJ: { price: 158.73, change: 0.92, changePercent: 0.58, high: 159.84, low: 157.12, volume: 12456789 },
+    PFE: { price: 28.94, change: -0.34, changePercent: -1.16, high: 29.45, low: 28.67, volume: 34567891 },
+    XOM: { price: 104.67, change: 2.13, changePercent: 2.08, high: 105.92, low: 102.34, volume: 23789456 }
+  };
+
+  const stockData = mockStockData[symbol.toUpperCase()];
+  if (!stockData) {
+    return res.status(404).json({ error: `Stock symbol ${symbol} not found in mock data.` });
+  }
+
+  // Add some randomization to make it feel "live"
+  const randomizedData = {
+    symbol: symbol.toUpperCase(),
+    price: +(stockData.price + (Math.random() - 0.5) * 2).toFixed(2),
+    change: +(stockData.change + (Math.random() - 0.5) * 0.5).toFixed(2),
+    changePercent: +(stockData.changePercent + (Math.random() - 0.5) * 0.2).toFixed(2),
+    high: +(stockData.high + (Math.random() - 0.5) * 1).toFixed(2),
+    low: +(stockData.low + (Math.random() - 0.5) * 1).toFixed(2),
+    volume: Math.floor(stockData.volume + (Math.random() - 0.5) * stockData.volume * 0.1),
+    timestamp: new Date().toISOString()
+  };
+
+  res.json(randomizedData);
+});
+
 // Proxy endpoint for NeuroSAN stock evaluator
 app.post('/api/neurosan/stock-analysis', async (req, res) => {
   try {

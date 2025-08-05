@@ -26,6 +26,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Link from '@mui/material/Link';
+import StockPriceWidget from './StockPriceWidget';
 
 const Dashboard = () => {
   const [newsResult, setNewsResult] = useState(null);
@@ -348,6 +349,11 @@ const Dashboard = () => {
           />
         )}
 
+      </Box>
+      
+      {/* Stock Price Widget */}
+      <Box sx={{ mb: 3, width: '100%' }}>
+        <StockPriceWidget symbol={selectedStock} />
       </Box>
       
       {stockAnalysis && (
