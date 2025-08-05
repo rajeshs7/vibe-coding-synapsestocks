@@ -17,26 +17,14 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import StockPriceWidget from './StockPriceWidget';
 
 const Dashboard = () => {
-  const [newsResult, setNewsResult] = useState(null);
   const [selectedStock, setSelectedStock] = useState('');
   const [buyOrSell, setBuyOrSell] = useState('Buy'); // Can be 'Buy' or 'Sell'
   const [stockAnalysis, setStockAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!selectedStock) {
-      setNewsResult(null);
-      return;
-    }
-    const API_URL = process.env.REACT_APP_API_URL || '';
-    fetch(`${API_URL}/api/agent/news?symbol=${selectedStock}`)
-      .then(res => res.json())
-      .then(data => setNewsResult(data))
-      .catch(() => setNewsResult({ headlines: ['Error fetching news'], summary: 'N/A' }));
-  }, [selectedStock]);
 
   const handleStockChange = (event) => {
     setSelectedStock(event.target.value);
@@ -191,7 +179,7 @@ const Dashboard = () => {
         return '#388e3c'; // green
       }
       // Negative keywords
-      if (/\b(negative|bearish|decline|decrease|failed|delay|down|loss|drop|fall|miss|deficit|risk|recall|cut|weak|losses|concern|volatile|underperform|warning|problem)\b|\-\d|\-\d+%/.test(t)) {
+      if (/\b(negative|bearish|decline|decrease|failed|delay|down|loss|drop|fall|miss|deficit|risk|recall|cut|weak|losses|concern|volatile|underperform|warning|problem)\b|-\d|-\d+%/.test(t)) {
         return '#d32f2f'; // red
       }
       return undefined;
@@ -240,103 +228,112 @@ const Dashboard = () => {
   return (
     <>
       <Typography variant="h4" gutterBottom>SynapseStocks Dashboard</Typography>
-<Typography variant="body1" gutterBottom>View stock trends and agent insights here.</Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3, mt: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-  <Typography sx={{ minWidth: 100, fontWeight: 500 }}>Select Stock</Typography>
-  <FormControl sx={{ minWidth: 180 }} size="small">
-    <Select
-      id="stock-select"
-      value={selectedStock}
-      onChange={handleStockChange}
-      sx={{
-        background: 'rgba(255,255,255,0.95)',
-        borderRadius: 2,
-      }}
-      MenuProps={{
-        PaperProps: {
-          sx: {
-            backgroundColor: '#fff',
-            borderRadius: 2,
-          },
-        },
-      }}
-    >
-      <MenuItem value="">Select</MenuItem>
-      <MenuItem value={'AAPL'}>Apple (AAPL)</MenuItem>
-      <MenuItem value={'MSFT'}>Microsoft (MSFT)</MenuItem>
-      <MenuItem value={'TSLA'}>Tesla (TSLA)</MenuItem>
-      <MenuItem value={'JNJ'}>Johnson & Johnson (JNJ)</MenuItem>
-      <MenuItem value={'PFE'}>Pfizer (PFE)</MenuItem>
-      <MenuItem value={'XOM'}>Exxon Mobil (XOM)</MenuItem>
-    </Select>
-  </FormControl>
-</Box>
-        <Button
-          variant="contained"
-          color="primary"
-          size="medium"
-          disabled={!selectedStock || loading}
-          sx={{ borderRadius: (theme) => theme.shape.borderRadius, fontWeight: 600, px: 3, boxShadow: 2, minWidth: 130 }}
-          onClick={handleGetInsights}
-        >
-          {loading ? <CircularProgress size={24} color="inherit" thickness={5} /> : 'Get Insights'}
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          size="medium"
-          sx={{ borderRadius: (theme) => theme.shape.borderRadius, fontWeight: 600, px: 3, ml: 2, boxShadow: 2 }}
-          onClick={() => { /* TODO: Add show my agent logic */ }}
-        >
-          Show My Agents
-        </Button>
-
-        {stockAnalysis && (
+      <Typography variant="body1" gutterBottom>View stock trends and agent insights here.</Typography>
+      
+      {/* Top Section with Controls and Stock Price Widget */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 3, mb: 3, mt: 2 }}>
+        {/* Left side - Controls */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography sx={{ minWidth: 100, fontWeight: 500 }}>Select Stock</Typography>
+            <FormControl sx={{ minWidth: 180 }} size="small">
+              <Select
+                id="stock-select"
+                value={selectedStock}
+                onChange={handleStockChange}
+                sx={{
+                  background: 'rgba(255,255,255,0.95)',
+                  borderRadius: 2,
+                }}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      backgroundColor: '#fff',
+                      borderRadius: 2,
+                    },
+                  },
+                }}
+              >
+                <MenuItem value="">Select</MenuItem>
+                <MenuItem value={'AAPL'}>Apple (AAPL)</MenuItem>
+                <MenuItem value={'MSFT'}>Microsoft (MSFT)</MenuItem>
+                <MenuItem value={'TSLA'}>Tesla (TSLA)</MenuItem>
+                <MenuItem value={'JNJ'}>Johnson & Johnson (JNJ)</MenuItem>
+                <MenuItem value={'PFE'}>Pfizer (PFE)</MenuItem>
+                <MenuItem value={'XOM'}>Exxon Mobil (XOM)</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          
           <Button
             variant="contained"
+            color="primary"
             size="medium"
-            sx={{
-              ml: 2,
-              fontSize: '1.1rem',
-              fontWeight: 700,
-              px: 3,
-              height: 40,
-              letterSpacing: 1,
-              textTransform: 'uppercase',
-              boxShadow: 2,
-              bgcolor: buyOrSell === 'BUY' ? '#388e3c' : buyOrSell === 'SELL' ? '#d32f2f' : '#ff9800',
-              '&:hover': {
-                bgcolor: buyOrSell === 'BUY' ? '#2e7d32' : buyOrSell === 'SELL' ? '#c62828' : '#f57c00',
-              }
-            }}
-            onClick={() => alert(`Action: ${buyOrSell} ${selectedStock}`)}
+            disabled={!selectedStock || loading}
+            sx={{ borderRadius: (theme) => theme.shape.borderRadius, fontWeight: 600, px: 3, boxShadow: 2, minWidth: 130 }}
+            onClick={handleGetInsights}
           >
-            {buyOrSell}
+            {loading ? <CircularProgress size={24} color="inherit" thickness={5} /> : 'Get Insights'}
           </Button>
-        )}
-        
-        {!stockAnalysis && (
-          <Chip
-            label={selectedStock ? 'Analyze' : 'Select Stock'}
-            sx={{
-              ml: 2,
-              fontSize: '1.1rem',
-              fontWeight: 700,
-              px: 2,
-              height: 40,
-              letterSpacing: 1,
-              textTransform: 'uppercase',
-              boxShadow: 2,
-              bgcolor: '#fff',
-              border: '1.5px solid',
-              borderColor: '#e0e0e0',
-              color: '#888',
-            }}
-            variant="filled"
-          />
-        )}
+          
+          <Button
+            variant="contained"
+            color="primary"
+            size="medium"
+            sx={{ borderRadius: (theme) => theme.shape.borderRadius, fontWeight: 600, px: 3, boxShadow: 2 }}
+            onClick={() => { /* TODO: Add show my agent logic */ }}
+          >
+            Show My Agents
+          </Button>
 
+          {stockAnalysis && (
+            <Button
+              variant="contained"
+              size="medium"
+              sx={{
+                fontSize: '1.1rem',
+                fontWeight: 700,
+                px: 3,
+                height: 40,
+                letterSpacing: 1,
+                textTransform: 'uppercase',
+                boxShadow: 2,
+                bgcolor: buyOrSell === 'BUY' ? '#388e3c' : buyOrSell === 'SELL' ? '#d32f2f' : '#ff9800',
+                '&:hover': {
+                  bgcolor: buyOrSell === 'BUY' ? '#2e7d32' : buyOrSell === 'SELL' ? '#c62828' : '#f57c00',
+                }
+              }}
+              onClick={() => alert(`Action: ${buyOrSell} ${selectedStock}`)}
+            >
+              {buyOrSell}
+            </Button>
+          )}
+          
+          {!stockAnalysis && (
+            <Chip
+              label={selectedStock ? 'Analyze' : 'Select Stock'}
+              sx={{
+                fontSize: '1.1rem',
+                fontWeight: 700,
+                px: 2,
+                height: 40,
+                letterSpacing: 1,
+                textTransform: 'uppercase',
+                boxShadow: 2,
+                bgcolor: '#fff',
+                border: '1.5px solid',
+                borderColor: '#e0e0e0',
+                color: '#888',
+              }}
+              variant="filled"
+            />
+          )}
+        </Box>
+        
+        {/* Right side - Stock Price Widget */}
+        <Box sx={{ minWidth: 300, maxWidth: 350 }}>
+          <StockPriceWidget symbol={selectedStock} />
+        </Box>
       </Box>
       
       {stockAnalysis && (
