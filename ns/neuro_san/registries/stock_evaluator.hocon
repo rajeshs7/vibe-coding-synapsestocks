@@ -1,10 +1,10 @@
 {
     "llm_config": {
         "model_name": "azure-gpt-4o",
-        "deployment_name": "PPMDevChatGPT4oModel",
-        "azure_endpoint": "https://azureopenaippmdev.openai.azure.com/",
-        "api_key": "978b3be5bb5c42dead52f270b2102fac",
-        "api_version": "2024-02-15-preview"
+        "deployment_name": "${AZURE_OPENAI_DEPLOYMENT_NAME}",
+        "azure_endpoint": "${AZURE_OPENAI_ENDPOINT}",
+        "api_key": "${AZURE_OPENAI_API_KEY}",
+        "api_version": "${OPENAI_API_VERSION}"
     },
     
     "tools": [
