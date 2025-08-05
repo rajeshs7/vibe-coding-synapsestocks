@@ -232,7 +232,11 @@ const Dashboard = () => {
   return (
     <>
       <Typography variant="h4" gutterBottom>SynapseStocks Dashboard</Typography>
-<Typography variant="body1" gutterBottom>View stock trends and agent insights here.</Typography>
+      <Typography variant="body1" gutterBottom sx={{ color: '#fff', fontSize: '1.35rem', fontWeight: 400 }}>
+        View stock trends and <span style={{ fontWeight: 700, color: '#fff' }}>Agentic AI-driven</span> analytics and insights here.
+      </Typography>
+      <br />
+      <br />
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3, mt: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
   <Typography sx={{ minWidth: 100, fontWeight: 500 }}>Select Stock</Typography>
