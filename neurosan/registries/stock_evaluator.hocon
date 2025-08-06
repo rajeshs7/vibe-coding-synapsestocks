@@ -1,0 +1,131 @@
+{
+    "llm_config": {
+        "model_name": "azure-gpt-4o",
+        "deployment_name": "${AZURE_OPENAI_DEPLOYMENT_NAME}",
+        "azure_endpoint": "${AZURE_OPENAI_ENDPOINT}",
+        "api_key": "${AZURE_OPENAI_API_KEY}",
+        "api_version": "${OPENAI_API_VERSION}"
+    },
+    
+    "tools": [
+        {
+            "name": "stock_evaluator",
+            "function": {
+                "description": "Orchestrates comprehensive stock evaluation by coordinating specialized agents"
+            },
+            "instructions": """
+You are the main stock evaluation orchestrator. For any stock symbol:
+
+1. Identify company name and sector
+2. Call news_analyzer to get news analysis
+3. Call financial_analyzer to get financial analysis  
+4. Call sector_analyzer to get 4 sector-specific factors
+5. Call recommendation_engine to get final recommendation
+6. Compile ALL results into this EXACT JSON format:
+
+{{
+  "Stock": "Company Name (SYMBOL)",
+  "Dashboard": [
+    {{
+      "Headline": "News",
+      "Summary": "from news_analyzer summary"
+    }},
+    {{
+      "Headline": "Financials",
+      "Summary": "from financial_analyzer summary"
+    }},
+    {{
+      "Headline": "Factor3Name",
+      "Summary": "from sector_analyzer[0] summary"
+    }},
+    {{
+      "Headline": "Factor4Name",
+      "Summary": "from sector_analyzer[1] summary"
+    }},
+    {{
+      "Headline": "Factor5Name",
+      "Summary": "from sector_analyzer[2] summary"
+    }},
+    {{
+      "Headline": "Factor6Name",
+      "Summary": "from sector_analyzer[3] summary"
+    }}
+  ],
+  "Actions": ["from recommendation_engine"]
+}}
+
+CRITICAL: Return ONLY the raw JSON object. Never use ```json or ``` or any markdown formatting. Just return the pure JSON starting with {{ and ending with }}.
+""",
+            "tools": ["news_analyzer", "financial_analyzer", "sector_analyzer", "recommendation_engine"]
+        },
+        
+        {
+            "name": "news_analyzer",
+            "function": {
+                "description": "Analyzes news sentiment and market buzz",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "stock_symbol": {"type": "string"},
+                        "company_name": {"type": "string"}
+                    },
+                    "required": ["stock_symbol", "company_name"]
+                }
+            },
+            "instructions": "Generate news analysis with sentiment percentage (60-85%), hashtags, and specific dates. Return ONLY JSON: {{\"Headline\": \"...\", \"Summary\": \"...\"}}",
+            "command": "Return pure JSON only"
+        },
+        
+        {
+            "name": "financial_analyzer",
+            "function": {
+                "description": "Analyzes financial metrics and performance",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "stock_symbol": {"type": "string"},
+                        "company_name": {"type": "string"}
+                    },
+                    "required": ["stock_symbol", "company_name"]
+                }
+            },
+            "instructions": "Generate financial analysis with revenue in billions, EPS with decimals, growth percentages. Return ONLY JSON: {{\"Headline\": \"...\", \"Summary\": \"...\"}}",
+            "command": "Return pure JSON only"
+        },
+        
+        {
+            "name": "sector_analyzer",
+            "function": {
+                "description": "Analyzes 4 sector-specific factors",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "stock_symbol": {"type": "string"},
+                        "company_name": {"type": "string"},
+                        "sector": {"type": "string"}
+                    },
+                    "required": ["stock_symbol", "company_name", "sector"]
+                }
+            },
+            "instructions": "Generate 4 sector-specific factors based on domain (TECH: Innovation Pipeline, Market Adoption, Cybersecurity, Regulatory | AUTOMOTIVE: Supply Chain, Raw Material Costs, EV Transition, Regulatory). Return ONLY JSON array: [{{\"Headline\": \"...\", \"Summary\": \"...\"}}, {{\"Headline\": \"...\", \"Summary\": \"...\"}}, {{\"Headline\": \"...\", \"Summary\": \"...\"}}, {{\"Headline\": \"...\", \"Summary\": \"...\"}}]",
+            "command": "Return pure JSON array only"
+        },
+        
+        {
+            "name": "recommendation_engine",
+            "function": {
+                "description": "Makes final investment recommendation",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "stock_symbol": {"type": "string"},
+                        "factors_summary": {"type": "string"}
+                    },
+                    "required": ["stock_symbol", "factors_summary"]
+                }
+            },
+            "instructions": "Based on all factors, return objective recommendation. BUY if 5+ positive factors, SELL if 4+ negative factors, HOLD if mixed. Return ONLY: BUY or SELL or HOLD (no quotes, no extra text)",
+            "command": "Return recommendation text only"
+        }
+    ]
+}

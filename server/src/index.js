@@ -88,7 +88,6 @@ app.post('/api/neurosan/stock-analysis', async (req, res) => {
     }
     try {
       // Commented out the actual NeuroSAN API call for mock/demo purposes
-      /*
       const response = await fetch('http://localhost:8080/api/v1/stock_evaluator/streaming_chat', {
         method: 'POST',
         headers: {
@@ -101,18 +100,18 @@ app.post('/api/neurosan/stock-analysis', async (req, res) => {
         })
       });
       const data = await response.json();
-      res.json(data);
-      */
-      // Instead, read and return output.json using ES module imports
-      const fs = await import('fs/promises');
-      const path = await import('path');
-      const { fileURLToPath } = await import('url');
-      const __dirname = path.dirname(fileURLToPath(import.meta.url));
-      const outputPath = path.join(__dirname, 'output.json');
-      const raw = await fs.readFile(outputPath, 'utf-8');
-      const data = JSON.parse(raw);
       console.log(data);
       res.json(data);
+      // Instead, read and return output.json using ES module imports
+      //const fs = await import('fs/promises');
+      // const path = await import('path');
+      // const { fileURLToPath } = await import('url');
+      // const __dirname = path.dirname(fileURLToPath(import.meta.url));
+      // const outputPath = path.join(__dirname, 'output.json');
+      // const raw = await fs.readFile(outputPath, 'utf-8');
+      // const data = JSON.parse(raw);
+      // console.log(data);
+      // res.json(data);
     } catch (error) {
       console.error('NeuroSAN proxy error:', error);
       res.status(500).json({ error: 'Failed to fetch stock analysis' });

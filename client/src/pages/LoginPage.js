@@ -18,8 +18,20 @@ export default function LoginPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
       });
+      
+      if (!res.ok) {
+        const text = await res.text();
+        let errorMsg = 'Login failed';
+        try {
+          const data = JSON.parse(text);
+          errorMsg = data.error || errorMsg;
+        } catch {
+          errorMsg = `Server error: ${res.status}`;
+        }
+        throw new Error(errorMsg);
+      }
+      
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Login failed');
       localStorage.setItem('token', data.token);
       navigate('/');
     } catch (err) {

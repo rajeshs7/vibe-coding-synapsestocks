@@ -101,8 +101,10 @@ const Dashboard = () => {
       }
       let analysisData;
       if (typeof data.response.text === 'string') {
+        console.log("String")
         analysisData = JSON.parse(data.response.text);
       } else {
+        console.log("text")
         analysisData = data.response.text;
       }
       if (!analysisData.Dashboard || !analysisData.Actions || !analysisData.Actions[0]) {
@@ -154,7 +156,7 @@ const Dashboard = () => {
 
 
   // Fallback image for unknown types
-  const fallbackImage = 'https://cdn-icons-png.flaticon.com/512/565/565547.png';
+  const fallbackImage = 'https://cdn-icons-png.flatiicon.com/512/565/565547.png';
 
   // Helper to normalize keys (lowercase, remove spaces/underscores)
   const normalizeKey = (str) => (str || '').toLowerCase().replace(/\s|_/g, '');

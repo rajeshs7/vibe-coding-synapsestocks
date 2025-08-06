@@ -22,8 +22,20 @@ export default function RegisterPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, username, password })
       });
+      
+      if (!res.ok) {
+        const text = await res.text();
+        let errorMsg = 'Registration failed';
+        try {
+          const data = JSON.parse(text);
+          errorMsg = data.error || errorMsg;
+        } catch {
+          errorMsg = `Server error: ${res.status}`;
+        }
+        throw new Error(errorMsg);
+      }
+      
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Registration failed');
       setSuccess(true);
       setTimeout(() => navigate('/login'), 1200);
     } catch (err) {
